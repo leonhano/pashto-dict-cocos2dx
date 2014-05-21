@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="win32">
+      <UniqueIdentifier>{84a8ebd7-7cf0-47f6-b75e-d441df67da40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes">
+      <UniqueIdentifier>{bb6c862e-70e9-49d9-81b7-3829a6f50471}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\UI">
+      <UniqueIdentifier>{0e745ca7-5d1b-469c-9469-b892bd4a877e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\DataStruct">
+      <UniqueIdentifier>{4a1d5cff-74b4-4160-9bac-f98f5ac6badc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\Tools">
+      <UniqueIdentifier>{0a007970-8e9d-48da-8ae2-03d27426274e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\AppDelegate.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\HelloWorldScene.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\UI\MainLayer.cpp">
+      <Filter>Classes\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\DataStruct\WordItem.cpp">
+      <Filter>Classes\DataStruct</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\DataStruct\WordManager.cpp">
+      <Filter>Classes\DataStruct</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\UI\UIManager.cpp">
+      <Filter>Classes\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\UI\WordScrollView.cpp">
+      <Filter>Classes\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Tools\FileReader.cpp">
+      <Filter>Classes\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Tools\CSVParse.cpp">
+      <Filter>Classes\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\UI\WordScrollViewLayer.cpp">
+      <Filter>Classes\UI</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="main.h">
+      <Filter>win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\AppDelegate.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\HelloWorldScene.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\UI\MainLayer.h">
+      <Filter>Classes\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\DataStruct\WordItem.h">
+      <Filter>Classes\DataStruct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\DataStruct\WordManager.h">
+      <Filter>Classes\DataStruct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\UI\UIManager.h">
+      <Filter>Classes\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\UI\WordScrollView.h">
+      <Filter>Classes\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Tools\FileReader.h">
+      <Filter>Classes\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Tools\CSVParse.h">
+      <Filter>Classes\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\UI\WordScrollViewLayer.h">
+      <Filter>Classes\UI</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
