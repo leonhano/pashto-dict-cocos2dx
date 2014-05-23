@@ -5,6 +5,7 @@
 
 CWordScrolllViewLayer::CWordScrolllViewLayer()
 {
+	m_parentLayer = NULL;
 }
 
 CWordScrolllViewLayer::~CWordScrolllViewLayer()
@@ -30,7 +31,7 @@ CWordScrolllViewLayer * CWordScrolllViewLayer::create(const ccColor4B& layerColo
 	CC_SAFE_DELETE(pLayer);
 	return NULL;
 };
-
+		  
 //create ScrollView;
 void CWordScrolllViewLayer::CreateScrollView(const CCSize& size)
 {
@@ -93,22 +94,46 @@ void CWordScrolllViewLayer::registerWithTouchDispatcher()
 bool CWordScrolllViewLayer::ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent)
 {
 	CCLog("touches begin:!!");
+
+	CCNode* child = this;
+	while((child != NULL) && (m_parentLayer == NULL))
+	{
+		CCNode* parent =  child->getParent();
+		m_parentLayer = dynamic_cast<CCLayer*>(parent);
+
+		if(m_parentLayer == NULL)
+		{
+			child =  parent;			
+		}	
+	}
+	
+	if(m_parentLayer)
+		m_parentLayer->ccTouchBegan(pTouch, pEvent);
 	return true;
 }
 
 void CWordScrolllViewLayer::ccTouchEnded(CCTouch *pTouch, CCEvent *pEvent)
 {
-	CCLog("touchesEnded:!!");
+	CCLog("touchesEnded:!!");	
+
+	if(m_parentLayer)
+		m_parentLayer->ccTouchEnded(pTouch, pEvent);
 }
 
 void CWordScrolllViewLayer::ccTouchCancelled(CCTouch *pTouch, CCEvent *pEvent)
 {	
-	CCLog("touches touchesCancelled:!!");
+	CCLog("touches touchesCancelled:!!");	
+
+	if(m_parentLayer)
+		m_parentLayer->ccTouchCancelled(pTouch, pEvent);
 }
 
 void CWordScrolllViewLayer::ccTouchMoved(CCTouch *pTouch, CCEvent *pEvent)
 {	
 	CCLog("touches touchesMoved:!!");
+
+	if(m_parentLayer)
+		m_parentLayer->ccTouchMoved(pTouch, pEvent);
 }
 
 //set term font name;

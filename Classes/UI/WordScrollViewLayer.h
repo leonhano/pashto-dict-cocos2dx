@@ -22,8 +22,8 @@ public:
 
 	//overload from CCLayer;
 	virtual bool initWithColor(const ccColor4B& layerColor, const CCRect& rect, 
-								const char* termFontName, const char* otherFontName); 
-	
+								const char* termFontName, const char* otherFontName);
+
 	//set wordItem to Display
 	void SetWordItemToDisplay(CWordItem* pWordItem, bool removeAllOldItems);
 	void SetWordItemVectorToDisplay(vector<CWordItem>* pWordItems, bool removeAllOldItems);
@@ -52,6 +52,8 @@ protected:
 public:
 	CCScrollView* m_scrollView;
 	CCLayerColor* m_container;	//container
+
+	CCLayer* m_parentLayer;	//for cast touch msg from this layer to main layer;
 
 	//Labels
 // 	vector<CCLabelTTF*> m_termLabels;
