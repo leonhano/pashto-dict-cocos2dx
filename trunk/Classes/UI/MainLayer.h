@@ -51,11 +51,16 @@ private:
 	CWordScrolllViewLayer* m_pDonationScrollViewLayer;		//scrollview layer
 	UIButton* m_sectionWordbtn;							//section word button;
 	UIButton* m_sectionDonationbtn;						//section Donation button;
+	int m_curScrollviewerLayerID;	//current scroll viewer id to show;
+	int m_scrollViewerCount;		//total scroll viewer count;
+
+	CCPoint m_touchdownPos;	//save touchdown position for movement;
+	
 
 protected :
 
-	void ShowScrollviewer(int curLayerId);		//based on current scrollviewer id to show scrollviewer
-
+	void ShowScrollviewer(int curLayerId);		//based on current scrollviewer id to show one scrollviewer
+	void MoveScrollviewers(float xOffset);		//based on x delta to move scrollviewer;
 public:	
 	//show word
 	bool ShowWord(CWordScrolllViewLayer* pScrollviewer, const char* term);	//show word in scrollview layer

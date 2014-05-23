@@ -171,7 +171,9 @@ bool CMainLayer::init()
 	m_pDonationScrollViewLayer= CWordScrolllViewLayer::create(ui_layout.Donation_Scrollviewer_BK_Color, ui_layout.Donation_Show_Layer_Rect);
 	m_pDonationScrollViewLayer->setTag(ui_layout.TAG_DonationScrollViewLayer);
 	whole_layer->addChild(m_pDonationScrollViewLayer);
-
+	
+	m_curScrollviewerLayerID = 0;	//default to show word scrollviewer layer;
+	m_scrollViewerCount = 2;		//2 scrollviewer now;
 		
 	//test for word scrollviewer;
 	vector<CWordItem>* wordItems = CWordManager::getInstance().GetWords("ابابیله");	
@@ -317,12 +319,9 @@ void CMainLayer::sectionButtonsCallback(CCObject *pSender, TouchEventType type)
 		else if(m_sectionDonationbtn->isFocused())
 		{
 			ShowScrollviewer(1);
-		}
-
-		
-		CCLog("word layer: isTouchEnabled = %d, m_scrollview = %d  ", m_pWordScrollViewLayer->isTouchEnabled(), m_pWordScrollViewLayer->m_scrollView->isTouchEnabled());
-		CCLog("Donation layer: isTouchEnabled = %d, m_scrollview = %d  ", m_pDonationScrollViewLayer->isTouchEnabled(), m_pDonationScrollViewLayer->m_scrollView->isTouchEnabled())	;
-		
+		}  		
+		//CCLog("word layer: isTouchEnabled = %d, m_scrollview = %d  ", m_pWordScrollViewLayer->isTouchEnabled(), m_pWordScrollViewLayer->m_scrollView->isTouchEnabled());
+		//CCLog("Donation layer: isTouchEnabled = %d, m_scrollview = %d  ", m_pDonationScrollViewLayer->isTouchEnabled(), m_pDonationScrollViewLayer->m_scrollView->isTouchEnabled())	;
 		break;
 	case TOUCH_EVENT_CANCELED:
 		break;
@@ -332,21 +331,50 @@ void CMainLayer::sectionButtonsCallback(CCObject *pSender, TouchEventType type)
 	}
 }
 
-//based on current scrollviewer id to show scrollviewer
+//based on current scrollviewer id to show one scrollviewer
 void CMainLayer::ShowScrollviewer(int curLayerId)
 {
+// 	if(m_curScrollviewerLayerID == curLayerId)
+// 		return;
+
+	if(curLayerId < 0)
+		curLayerId = 0;
+
+	if(curLayerId >= m_scrollViewerCount)
+		curLayerId = m_scrollViewerCount -1;
+
+	float xOffset = -1 * curLayerId * m_pWordScrollViewLayer->getContentSize().width;	 //calculate x offset to move all layers;
+	MoveScrollviewers(xOffset);	
+	m_curScrollviewerLayerID = curLayerId;
+
+	if(curLayerId == 0)
+		SetButtonFocused(m_sectionWordbtn);
+	else if	(curLayerId == 1)
+		SetButtonFocused(m_sectionDonationbtn);
+}
+
+
+//************************************
+// Method:    MoveScrollviewers
+// FullName:  CMainLayer::MoveScrollviewers
+// Access:    protected 
+// Returns:   void
+// Qualifier: based on x delta to move scrollviewer;
+// Parameter: float xOffset : x Offset;
+//************************************
+void CMainLayer::MoveScrollviewers(float xOffset)
+{		
 	CUIManager::UI_LAYOUT ui_layout = CUIManager::getInstance().ui_layout;
 
-	float xOffset = -1 * curLayerId * m_pWordScrollViewLayer->getContentSize().width;
-	
 	//new word scrollviewer position
 	CCPoint newWordLayerPos = ccp(ui_layout.Word_Show_Layer_Rect.origin.x + xOffset, ui_layout.Word_Show_Layer_Rect.origin.y);
 	m_pWordScrollViewLayer->setPosition(newWordLayerPos);
-	
+
 	//new donation scrollviewer position;
 	CCPoint newDonationLayerPos = ccp(ui_layout.Donation_Show_Layer_Rect.origin.x + xOffset, ui_layout.Donation_Show_Layer_Rect.origin.y);
 	m_pDonationScrollViewLayer->setPosition(newDonationLayerPos);
 }
+
 
 //set buttons focused;
 void CMainLayer::SetButtonFocused(UIButton* pButton)
@@ -375,7 +403,7 @@ bool CMainLayer::ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent)
 {
 	bool bRet = true;  
 	
-	
+	m_touchdownPos = pTouch->getLocation();
 
 	return bRet;  
 }
@@ -383,16 +411,36 @@ bool CMainLayer::ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent)
 void CMainLayer::ccTouchMoved (CCTouch *pTouch, CCEvent *pEvent)
 {
 	//m_pWordScrollViewLayer->ccTouchMoved(pTouch, pEvent); 
+
+	CCPoint curPos = pTouch->getLocation();
+	float xOffset = curPos.x - m_touchdownPos.x;
+	MoveScrollviewers(xOffset);
 }
 
 void CMainLayer::ccTouchEnded (CCTouch *pTouch, CCEvent *pEvent)
-{
-
+{		   
+	CCPoint curPos = pTouch->getLocation();
+	float xOffset = curPos.x - m_touchdownPos.x;
+	float xAbsOffset = fabsf(xOffset);
+	float scrollviewWidth = m_pWordScrollViewLayer->getContentSize().width;
+	float xScale = scrollviewWidth / 2;
+	
+	if(xAbsOffset>= xScale)	//if offset is more than half of scrollviewer width, then move to next one;
+	{
+		if(xOffset > 0)
+		{
+			ShowScrollviewer(m_curScrollviewerLayerID - 1);
+		}
+		else
+		{
+			ShowScrollviewer(m_curScrollviewerLayerID + 1);
+		}
+	}	  
 }
 
 void CMainLayer::ccTouchCancelled (CCTouch *pTouch, CCEvent *pEvent)
 {
-
+		CCLog("Main layer: ccTouchCancelled");
 }
 
 //show word in scrollview layer
