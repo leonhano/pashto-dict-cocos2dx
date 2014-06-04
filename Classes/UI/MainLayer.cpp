@@ -414,7 +414,8 @@ void CMainLayer::ccTouchMoved (CCTouch *pTouch, CCEvent *pEvent)
 
 	CCPoint curPos = pTouch->getLocation();
 	float xOffset = curPos.x - m_touchdownPos.x;
-	MoveScrollviewers(xOffset);
+	float currentLayerCenter =  (-1) * m_curScrollviewerLayerID * m_pWordScrollViewLayer->getContentSize().width;
+	MoveScrollviewers(xOffset + currentLayerCenter);
 }
 
 void CMainLayer::ccTouchEnded (CCTouch *pTouch, CCEvent *pEvent)
@@ -435,7 +436,9 @@ void CMainLayer::ccTouchEnded (CCTouch *pTouch, CCEvent *pEvent)
 		{
 			ShowScrollviewer(m_curScrollviewerLayerID + 1);
 		}
-	}	  
+	}	 
+	else
+		ShowScrollviewer(m_curScrollviewerLayerID);
 }
 
 void CMainLayer::ccTouchCancelled (CCTouch *pTouch, CCEvent *pEvent)
