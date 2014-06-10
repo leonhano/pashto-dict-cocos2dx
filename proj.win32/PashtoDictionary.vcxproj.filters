@@ -16,6 +16,9 @@
     <Filter Include="Classes\Tools">
       <UniqueIdentifier>{0a007970-8e9d-48da-8ae2-03d27426274e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="CSV">
+      <UniqueIdentifier>{bcc34045-3197-4cd8-8f5d-097604e22af9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -86,5 +89,28 @@
     <ClInclude Include="..\Classes\UI\WordScrollViewLayer.h">
       <Filter>Classes\UI</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Resources\Pashto_English_Data\part1.csv">
+      <Filter>CSV</Filter>
+    </None>
+    <None Include="..\Resources\Pashto_English_Data\part2.csv">
+      <Filter>CSV</Filter>
+    </None>
+    <None Include="..\Resources\Pashto_English_Data\part3.csv">
+      <Filter>CSV</Filter>
+    </None>
+    <None Include="..\Resources\Pashto_English_Data\part4.csv">
+      <Filter>CSV</Filter>
+    </None>
+    <None Include="..\Resources\Pashto_English_Data\part5.csv">
+      <Filter>CSV</Filter>
+    </None>
+    <None Include="..\Resources\Pashto_English_Data\part6.csv">
+      <Filter>CSV</Filter>
+    </None>
+    <None Include="..\Resources\Pashto_English_Data\Pashto English Dictionary - Sheet1.csv">
+      <Filter>CSV</Filter>
+    </None>
   </ItemGroup>
 </Project>

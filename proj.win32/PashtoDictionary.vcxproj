@@ -178,6 +178,15 @@ xcopy /Y /Q "$(ProjectDir)..\..\..\external\libwebsockets\win32\lib\*.*" "$(OutD
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Resources\Pashto_English_Data\part1.csv" />
+    <None Include="..\Resources\Pashto_English_Data\part2.csv" />
+    <None Include="..\Resources\Pashto_English_Data\part3.csv" />
+    <None Include="..\Resources\Pashto_English_Data\part4.csv" />
+    <None Include="..\Resources\Pashto_English_Data\part5.csv" />
+    <None Include="..\Resources\Pashto_English_Data\part6.csv" />
+    <None Include="..\Resources\Pashto_English_Data\Pashto English Dictionary - Sheet1.csv" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
