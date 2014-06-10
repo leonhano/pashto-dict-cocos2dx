@@ -46,7 +46,7 @@ public:
 
 protected:
 	enum empties_type { empties_ok, no_empties };   		
-	vector<string>& split(vector<string>& result, const string& s, const string& delimiters, empties_type empties/* = SplitType::empties_ok */);
+	vector<string>& splitString(vector<string>& result, const string& s, const string& delimiters, empties_type empties/* = SplitType::empties_ok */);
 
 	CWordItem* ParseVectorString(vector<string>& data);
 };

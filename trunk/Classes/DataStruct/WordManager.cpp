@@ -4,6 +4,8 @@
 
 using namespace std;
 
+#define SPLIT_CHARACTER "$"
+
 void CWordManager::AddWord(CWordItem* pWordItem)
 {
 	if(pWordItem == NULL)
@@ -96,7 +98,7 @@ void CWordManager::CreateWordsMapFromFile(const char* fileName)
 	{
 		string src = *it;
 		vector <string> fields;
-		split(fields, *it, ",", empties_ok);
+		splitString(fields, *it, SPLIT_CHARACTER, empties_ok);
 		CWordItem* wordItem = ParseVectorString(fields);
 		if(wordItem == NULL)
 		{
@@ -112,7 +114,7 @@ void CWordManager::CreateWordsMapFromFile(const char* fileName)
 }
 
 //split string 
-vector<string>& CWordManager::split(vector<string>& result, const string& s, const string& delimiters, empties_type empties/* = SplitType::empties_ok */)							    
+vector<string>& CWordManager::splitString(vector<string>& result, const string& s, const string& delimiters, empties_type empties/* = SplitType::empties_ok */)							    
 {
 	result.clear();
 	size_t current;

@@ -273,7 +273,7 @@ void CMainLayer::textFieldEvent(CCObject *pSender, TextFiledEventType type)
 			if(isNumber)
 			{				 
 				map<string, vector<CWordItem> >* pWordMap = &(CWordManager::getInstance().m_wordsMap);
-				int id = (int)rand()%(pWordMap->size())+1;
+				int id = (int)rand()%(pWordMap->size());
 				bFindWord = ShowWord(m_pWordScrollViewLayer, id); 
 			}
 			else

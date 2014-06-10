@@ -352,7 +352,7 @@ CCLabelTTF* CWordScrolllViewLayer::CreateLabel (const string& str, const char *f
 	CCSize size = m_container->getContentSize();  
 	CCSize dimensions = CCSize(CCPoint(size.width, height))	;   
 	
-	CCLog("CreateLabel() !!!!! weird , in andorid, can't use  setDimensions");
+	//CCLog("CreateLabel() !!!!! weird , in andorid, can't use  setDimensions");
 	//!!!!! weird , in andorid, can't use  setDimensions"!!!!!!
 	//pLabel->setDimensions(dimensions);  
 
