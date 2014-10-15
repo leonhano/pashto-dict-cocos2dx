@@ -42,9 +42,6 @@
     <ClCompile Include="..\Classes\UI\UIManager.cpp">
       <Filter>Classes\UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\UI\WordScrollView.cpp">
-      <Filter>Classes\UI</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\Tools\FileReader.cpp">
       <Filter>Classes\Tools</Filter>
     </ClCompile>
@@ -52,6 +49,15 @@
       <Filter>Classes\Tools</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\UI\WordScrollViewLayer.cpp">
+      <Filter>Classes\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\UI\HomeViewLayer.cpp">
+      <Filter>Classes\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\UI\UITools.cpp">
+      <Filter>Classes\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\UI\DonationViewLayer.cpp">
       <Filter>Classes\UI</Filter>
     </ClCompile>
   </ItemGroup>
@@ -77,9 +83,6 @@
     <ClInclude Include="..\Classes\UI\UIManager.h">
       <Filter>Classes\UI</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\UI\WordScrollView.h">
-      <Filter>Classes\UI</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\Tools\FileReader.h">
       <Filter>Classes\Tools</Filter>
     </ClInclude>
@@ -87,6 +90,15 @@
       <Filter>Classes\Tools</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\UI\WordScrollViewLayer.h">
+      <Filter>Classes\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\UI\HomeViewLayer.h">
+      <Filter>Classes\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\UI\UITools.h">
+      <Filter>Classes\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\UI\DonationViewLayer.h">
       <Filter>Classes\UI</Filter>
     </ClInclude>
   </ItemGroup>

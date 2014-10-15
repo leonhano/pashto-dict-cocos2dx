@@ -45,7 +45,7 @@ void CWordItem::AddPronunciation(const string &pronunciation)
 		m_pronunciation = pronunciation;
 	else
 	{
-		CCLog("Error! Failed to add pronunciation!  term = %s, id = %d", m_term.c_str(), (int)m_id);
+		//CCLog("Error! Failed to add pronunciation!  term = %s, id = %d", m_term.c_str(), (int)m_id);
 	}
 }
 
@@ -55,7 +55,7 @@ void CWordItem::AddMean(const string &mean)
 		m_means.push_back(mean);
 	else
 	{
-		CCLog("Error! Failed to add mean!  term = %s, id = %d",  m_term.c_str(), (int)m_id);
+		//CCLog("Error! Failed to add mean!  term = %s, id = %d",  m_term.c_str(), (int)m_id);
 	}
 }
 
@@ -65,7 +65,7 @@ void CWordItem::AddSentence(const string &sentence)
 		m_sampleSentence.push_back(sentence);
 	else
 	{
-		CCLog("Error! Failed to add sentence!  term = %s, id = %d",  m_term.c_str(), (int)m_id);
+		//CCLog("Error! Failed to add sentence!  term = %s, id = %d",  m_term.c_str(), (int)m_id);
 	}
 }
 

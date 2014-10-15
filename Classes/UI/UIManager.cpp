@@ -12,8 +12,20 @@ void CUIManager::init()
 	SetDevice(IPHONE5_RESOLUTION);	 //setup deveice
 	SetUITheme();
 
-	Test();	  
+	//add searchPath
+	CCFileUtils::sharedFileUtils()->addSearchPath("Pashto_English_Data");
+	CCFileUtils::sharedFileUtils()->addSearchPath("UI");
 
+	//Test();
+
+	//import data from csv file 
+	CWordManager::getInstance().CreateWordsMapFromFile("part1.csv"); 
+	// 	CWordManager::getInstance().CreateWordsMapFromFile("part2.csv");
+	// 	CWordManager::getInstance().CreateWordsMapFromFile("part3.csv");
+	// 	CWordManager::getInstance().CreateWordsMapFromFile("part4.csv");
+	// 	CWordManager::getInstance().CreateWordsMapFromFile("part5.csv");
+	// 	CWordManager::getInstance().CreateWordsMapFromFile("part6.csv");
+	
 	//run main layer;
 	CCDirector* pDirector = CCDirector::sharedDirector();
 	CCScene *pScene = CMainLayer::scene();
@@ -24,16 +36,7 @@ void CUIManager::Test()
 {		   
 	//test to add words;
 	TestAddWord();
-
-
-	CCFileUtils::sharedFileUtils()->addSearchPath("Pashto_English_Data");
-	CWordManager::getInstance().CreateWordsMapFromFile("part1.csv"); 
-	CWordManager::getInstance().CreateWordsMapFromFile("part2.csv");
-	CWordManager::getInstance().CreateWordsMapFromFile("part3.csv");
-	CWordManager::getInstance().CreateWordsMapFromFile("part4.csv");
-	CWordManager::getInstance().CreateWordsMapFromFile("part5.csv");
-	CWordManager::getInstance().CreateWordsMapFromFile("part6.csv");
-	
+		
 	//hao - test for file reader;
 	//FileReader::GetWordItemsFromFile("Pashto English Dictionary - Sheet1.tsv");
 
@@ -159,7 +162,7 @@ void CUIManager::SetDevice(float width, float height)
 	pEGLView->setDesignResolutionSize(designResolutionSize.width, designResolutionSize.height, kResolutionShowAll);
 
 	// turn on display FPS
-	pDirector->setDisplayStats(true);
+	pDirector->setDisplayStats(false);
 
 	// set FPS. the default value is 1.0/60 if you don't call this
 	pDirector->setAnimationInterval(1.0 / 60);
@@ -317,38 +320,73 @@ void CUIManager::SetIphone5Layout()
 	//layout
 	ui_layout.Whole_Layer_Size = CCSize(IPHONE5_RESOLUTION);
 	
-	//key Textfield
-	ui_layout.Input_TextField_Rect = CCRect(90, 1032, 455, 70);
-	ui_layout.IMG_TextField_Rect = CCRect(90, 1020, 455, 70);
-	ui_layout.FONTSIZE_KEY_TEXTFIELD = 40;	//font size;
+	int curY = ui_layout.Whole_Layer_Size.height;
+
+	//background;
+	curY -= 334;
+	ui_layout.Bkg_Rect =  CCRect(0, curY, 638, 1150); 
+	ui_layout.BKG_IMAGE1 = "background1.png";
+	ui_layout.BKG_IMAGE2 = "background2.png";
+	ui_layout.BKG_IMAGE3 = "background3.png";
 
 	//Section areas
-	ui_layout.Section_Area_Rect = CCRect(0, 962, 640, 68);
-	ui_layout.Section_Area_Bkg_Color = ccGRAY;
+	curY = 1150 - 80;
+	ui_layout.Section_Area_Rect = CCRect(0, curY, 640, 80);
+	ui_layout.Section_Area_Bkg_Color =  ccc4f(192,192,192,180);
 	ui_layout.Section_Button_FontName = "Arial";
 	ui_layout.Section_Button_FontSize = 28;
 	ui_layout.Section_Button_TextColor = ccWHITE;	
-	ui_layout.Section_Button_Texture_Normal = "Section_Button_Normal.png";
-	ui_layout.Section_Button_Texture_Selected = "Section_Button_Selected.png";
-	ui_layout.Section_Button_Texture_Disabled = "Section_Button_Disabled.png";
-	//word button
-	ui_layout.Section_Word_Button_Rect = CCRect(90, 962, 180, 68);
-	ui_layout.Section_Word_Button_Text = "Word";
-	//donation button
-	ui_layout.Section_Donation_Button_Rect = CCRect(471, 962, 180, 68);
-	ui_layout.Section_Donation_Button_Text = "Donation";
+// 	ui_layout.Section_Button_Texture_Normal = "Section_Button_Normal.png";
+// 	ui_layout.Section_Button_Texture_Selected = "Section_Button_Selected.png";
+// 	ui_layout.Section_Button_Texture_Disabled = "Section_Button_Disabled.png";
 
-	//word ScrollViewer;
-	ui_layout.Word_Show_Layer_Rect = CCRect(0, 0, 640, 940);
-	ui_layout.Word_Scrollviewer_BK_Color = ccc4(173,207,255,180);
-	ui_layout.LABEL_TERM_FONT_SIZE = 50;
+
+	//Home button	
+	ui_layout.Section_Home_Button_Rect = CCRect(70,curY +30 , 50, 50);
+	//ui_layout.Section_Home_Button_Text = "Home";
+	ui_layout.Section_Home_Button_Texture_Normal = "homeicon.png";
+	ui_layout.Section_Home_Button_Texture_Selected = "highome.png";
+	ui_layout.Section_Home_Button_Texture_Disabled = "homeicon.png";
+
+	//word button
+	ui_layout.Section_Word_Button_Rect = CCRect(296, curY +30, 50, 50);
+	//ui_layout.Section_Word_Button_Text = "Word";
+	ui_layout.Section_Word_Button_Texture_Normal = "deficon.png";
+	ui_layout.Section_Word_Button_Texture_Selected = "highdefi.png";
+	ui_layout.Section_Word_Button_Texture_Disabled = "deficon.png";
+
+	//donation button
+	ui_layout.Section_Donation_Button_Rect = CCRect(552, curY +30, 50, 50);
+	//ui_layout.Section_Donation_Button_Text = "Donation";
+	ui_layout.Section_Donation_Button_Texture_Normal = "donaicon.png";
+	ui_layout.Section_Donation_Button_Texture_Selected = "highdona.png";
+	ui_layout.Section_Donation_Button_Texture_Disabled = "donaicon.png";
+	
+	//key Textfield
+	curY = 1150 - 465;
+	ui_layout.Input_TextField_Rect = CCRect(45, curY + 58, 572, 65);
+	ui_layout.IMG_TextField_Rect = CCRect(30, curY + 50, 572, 60);
+	ui_layout.FONTSIZE_KEY_TEXTFIELD = 40;	//font size;
+	ui_layout.FONTCOLOR_TEXTFIELD = ccc3(0.0f, 0.0f, 0.0f);
+
+	//---------------------viewer---------------------------//
+	ui_layout.LABEL_NORMAL_FONT_SIZE = 40;
+	ui_layout.LABEL_TERM_FONT_SIZE = 40;
 	ui_layout.LABEL_OTHER_FONT_SIZE = 30 ;
 	ui_layout.LABEL_X_MARGIN = 10 ;
-	ui_layout.LABEL_Y_MARGIN = 15;			  
+	ui_layout.LABEL_Y_MARGIN = 15;		
 	ui_layout.LABEL_DEFAULT_TERM_FONTNAME = "Arial";
 	ui_layout.LABEL_DEFAULT_OTHER_FONTNAME = "Pokhto" ;	
 
+	//Home ScrollViewer
+	ui_layout.Home_Show_Layer_Rect = CCRect(0, 0, 640, 700);
+	ui_layout.Home_Scrollviewer_BK_Color = ccc4(192,192,192,180);//ccc4(73,107,155,180);
+
+	//word ScrollViewer;
+	ui_layout.Word_Show_Layer_Rect = CCRect(640, 0, 640, 700);
+	ui_layout.Word_Scrollviewer_BK_Color = ccc4(192,192,192,180);//ccc4(173,207,255,180);
+
 	//donation scrollviewer
-	ui_layout.Donation_Show_Layer_Rect = CCRect(640, 0, 640, 940);
-	ui_layout.Donation_Scrollviewer_BK_Color = ccc4(255,107,200,180);
+	ui_layout.Donation_Show_Layer_Rect = CCRect(1280, 0, 640, 700);
+	ui_layout.Donation_Scrollviewer_BK_Color = ccc4(192,192,192,180);//ccc4(255,107,200,180);	
 }													 

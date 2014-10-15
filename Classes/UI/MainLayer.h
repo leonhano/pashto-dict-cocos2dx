@@ -4,6 +4,8 @@
 #include "cocos2d.h"   
 #include "cocos-ext.h" 
 #include "WordScrollViewLayer.h"
+#include "HomeViewLayer.h"
+#include "DonationViewLayer.h"
 
 using namespace cocos2d::extension;
 using namespace cocos2d::ui;
@@ -46,9 +48,15 @@ public:
 private:
 	TouchGroup* m_pUILayer; //layer对象
 	//UILayout* m_pLayout;
+	CCSprite* m_pBkgSpirte; 
+	CCTexture2D *m_pBkgTexture1;
+	CCTexture2D *m_pBkgTexture2;
+	CCTexture2D *m_pBkgTexture3;
 
-	CWordScrolllViewLayer* m_pWordScrollViewLayer;		//scrollview layer
-	CWordScrolllViewLayer* m_pDonationScrollViewLayer;		//scrollview layer
+	CHomeViewLayer* m_pHomeScrollViewLayer;		//home scrollview layer
+	CWordScrolllViewLayer* m_pWordScrollViewLayer;		//word scrollview layer
+	CDonationViewLayer* m_pDonationScrollViewLayer;	//donation scrollview layer
+	UIButton* m_sectionHomebtn;							//section Home button;
 	UIButton* m_sectionWordbtn;							//section word button;
 	UIButton* m_sectionDonationbtn;						//section Donation button;
 	int m_curScrollviewerLayerID;	//current scroll viewer id to show;
@@ -56,7 +64,13 @@ private:
 
 	CCPoint m_touchdownPos;	//save touchdown position for movement;
 	
+	//add button to layer;
+	UIButton* AddButton(int tag, 
+						const char* normal,const char* selected,const char* disabled, 
+						const CCRect& rect, bool focused);
 
+	//change background image
+	void ChangeBkgImage(int curLayerId);
 protected :
 
 	void ShowScrollviewer(int curLayerId);		//based on current scrollviewer id to show one scrollviewer

@@ -155,9 +155,9 @@ void CCSVParse::OutputStrings(const char* fileName, vector<string>* outputString
 		//		this->addChild(pLab,2); 
 
 		outputStringVector->push_back(strLine);
-		CCLog(strLine.c_str());
+		//CCLog(strLine.c_str());
 	}  
 	delete csvFile;
-
-	CCLog("---------- End ----------");
+	
+	CCLog("---------- End ---------- push %d words into vectors", outputStringVector->size());
 }

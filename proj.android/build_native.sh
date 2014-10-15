@@ -65,6 +65,8 @@ if [ -f "$file" ]; then
 fi
 done
 
+echo "done --> copy resources"
+
 # run ndk-build
 if [[ "$buildexternalsfromsource" ]]; then
     echo "Building external dependencies from source"

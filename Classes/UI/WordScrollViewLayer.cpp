@@ -1,5 +1,6 @@
 ﻿#include "WordScrollViewLayer.h"
 #include "UIManager.h"
+#include "UITools.h"
 									  
 #define WORDSCROLLVIEW_MSG		"WordScrollView_MSG"
 
@@ -35,6 +36,8 @@ CWordScrolllViewLayer * CWordScrolllViewLayer::create(const ccColor4B& layerColo
 //create ScrollView;
 void CWordScrolllViewLayer::CreateScrollView(const CCSize& size)
 {
+	m_totalItemsHeight = 0;
+
 	//create scrollview and container;
 	m_scrollView = CCScrollView::create();
 	m_scrollView->setViewSize(size);
@@ -44,12 +47,14 @@ void CWordScrolllViewLayer::CreateScrollView(const CCSize& size)
 	//setup container
 	m_container = CCLayerColor::create(m_layerColor, size.width, size.height);
 	m_container->setContentSize(size);
+	m_container->setTouchEnabled(true);
 	m_scrollView->addChild(m_container);
 
 	//init scrollview properties
 	//m_scrollView->setPosition(ccp(rect.getMinX(), rect.getMinY()));	 
 	m_scrollView->setDirection(kCCScrollViewDirectionVertical);	
 	m_scrollView->setBounceable(true);
+	m_scrollView->setTouchEnabled(false);
 }
 
 bool CWordScrolllViewLayer::initWithColor(const ccColor4B& layerColor, const CCRect& rect, 
@@ -75,7 +80,7 @@ bool CWordScrolllViewLayer::initWithColor(const ccColor4B& layerColor, const CCR
 	m_otherFontName = otherFontName;
 
 	//enable touch event
-	setTouchEnabled(true);
+	setTouchEnabled(true);  //very important, true: open horizon touch for parent, false: just local touch;
 
 	//test: add msg notification;
 	CCNotificationCenter::sharedNotificationCenter()->addObserver(m_scrollView, callfuncO_selector(CWordScrolllViewLayer::onMsgCenter), WORDSCROLLVIEW_MSG, NULL);
@@ -130,7 +135,12 @@ void CWordScrolllViewLayer::ccTouchCancelled(CCTouch *pTouch, CCEvent *pEvent)
 
 void CWordScrolllViewLayer::ccTouchMoved(CCTouch *pTouch, CCEvent *pEvent)
 {	
-	CCLog("touches touchesMoved:!!");
+	CCPoint delta = pTouch->getDelta();
+	//CCLog("touches touchesMoved:!!  delta = %f, %f", delta.x, delta.y);
+	if(m_totalItemsHeight>m_scrollView->getContentSize().height)
+		m_scrollView->setTouchEnabled(true);
+
+	//m_scrollView->setContentOffset(CCPoint(0,delta.y), true);
 
 	if(m_parentLayer)
 		m_parentLayer->ccTouchMoved(pTouch, pEvent);
@@ -188,15 +198,19 @@ void CWordScrolllViewLayer::SetTextToDisplay(const char* str)
 	RecreateAllItems();
 	
 	CUIManager::UI_LAYOUT ui_layout = CUIManager::getInstance().ui_layout;
-	float labelHeight = max(ui_layout.LABEL_TERM_FONT_SIZE, ui_layout.LABEL_OTHER_FONT_SIZE) + ui_layout.LABEL_Y_MARGIN;
 	float viewHeight = m_scrollView->getViewSize().height;
 
 	//create term label
-	CCLabelTTF* pTermLabel = CreateLabel(str, m_termFontName.c_str(), ui_layout.LABEL_TERM_FONT_SIZE, labelHeight, ccBLUE);		
-	pTermLabel->setPosition(ccp(ui_layout.LABEL_X_MARGIN, viewHeight - (1.5 *ui_layout.LABEL_Y_MARGIN) ));	//top
+	float labelWidth = m_scrollView->getViewSize().width - 2 * ui_layout.LABEL_X_MARGIN;
+	CCLabelTTF* pTermLabel = UITools::CreateLabel(str, m_termFontName.c_str(), ui_layout.LABEL_TERM_FONT_SIZE, ccBLUE, labelWidth);
+	
+	pTermLabel->setPosition(ccp(ui_layout.LABEL_X_MARGIN, viewHeight - pTermLabel->getContentSize().height));	//top
 	m_container->addChild(pTermLabel);
 
-	m_scrollView->setTouchEnabled(false);
+	m_totalItemsHeight += pTermLabel->getContentSize().height;
+
+	if(m_totalItemsHeight>m_scrollView->getContentSize().height)
+		m_scrollView->setTouchEnabled(true);
 }
 
 //set worditem to show
@@ -212,20 +226,23 @@ void CWordScrolllViewLayer::SetWordItemToDisplay(CWordItem* pWordItem, bool remo
 	}
 
 	CUIManager::UI_LAYOUT ui_layout = CUIManager::getInstance().ui_layout;
-	float labelHeight = max(ui_layout.LABEL_TERM_FONT_SIZE, ui_layout.LABEL_OTHER_FONT_SIZE) + ui_layout.LABEL_Y_MARGIN;
+	m_totalItemsHeight += ui_layout.LABEL_Y_MARGIN;
 	int labelCount = 0;
 
 	//create term label
-	CCLabelTTF* pTermLabel = CreateLabel(pWordItem->m_term, m_termFontName.c_str(), ui_layout.LABEL_TERM_FONT_SIZE, labelHeight, ccBLUE);
+	float labelWidth = m_scrollView->getViewSize().width - 2 * ui_layout.LABEL_X_MARGIN;
+	CCLabelTTF* pTermLabel = UITools::CreateLabel(pWordItem->m_term, m_termFontName.c_str(), ui_layout.LABEL_TERM_FONT_SIZE, ccBLUE, labelWidth);
 	labelCount++;	
+	m_totalItemsHeight += pTermLabel->getContentSize().height;
 
 	//create pronunciation label
 	string pronunciation = 	pWordItem->m_pronunciation;
 	CCLabelTTF* pPronunciationLabel = NULL;
 	if(pronunciation.size() >0)
 	{
-		pPronunciationLabel = CreateLabel(pronunciation, m_otherFontName.c_str(), ui_layout.LABEL_OTHER_FONT_SIZE, labelHeight, ccBLACK);
+		pPronunciationLabel = UITools::CreateLabel(pronunciation, m_otherFontName.c_str(), ui_layout.LABEL_OTHER_FONT_SIZE, ccBLACK, labelWidth);
 		labelCount++;
+		m_totalItemsHeight += pPronunciationLabel->getContentSize().height;
 	}
 	
 	//create means labels;
@@ -235,9 +252,10 @@ void CWordScrolllViewLayer::SetWordItemToDisplay(CWordItem* pWordItem, bool remo
 		string mean = *meansIT;
 		if(mean.size() > 0)
 		{
-			CCLabelTTF * pLabel = CreateLabel(mean, m_otherFontName.c_str(), ui_layout.LABEL_OTHER_FONT_SIZE, labelHeight, ccBLACK);
+			CCLabelTTF * pLabel = UITools::CreateLabel(mean, m_otherFontName.c_str(), ui_layout.LABEL_OTHER_FONT_SIZE, ccBLACK, labelWidth);
 			meansLabels.push_back(pLabel);
 			labelCount++;
+			m_totalItemsHeight += pLabel->getContentSize().height;
 		}
 	}
 	
@@ -248,17 +266,14 @@ void CWordScrolllViewLayer::SetWordItemToDisplay(CWordItem* pWordItem, bool remo
 		string sampleSentence = *sampleIT;
 		if(sampleSentence.size() > 0)
 		{
-			CCLabelTTF * pLabel = CreateLabel(*sampleIT, m_otherFontName.c_str(), ui_layout.LABEL_OTHER_FONT_SIZE, labelHeight, ccBLACK);
+			CCLabelTTF * pLabel = UITools::CreateLabel(*sampleIT, m_otherFontName.c_str(), ui_layout.LABEL_OTHER_FONT_SIZE, ccBLACK, labelWidth);
 			sampleSentencesLabels.push_back(pLabel);	
 			labelCount++;
+			m_totalItemsHeight += pLabel->getContentSize().height;
 		}
 	}
 
-	//based on label to setup container size;     
-	float deltaYPos(m_totalItemsHeight);
-
-	float curTotalItemsHeight = labelCount * labelHeight + ui_layout.LABEL_Y_MARGIN;	//current total label height;
-	m_totalItemsHeight += curTotalItemsHeight;								//total label height;
+	//based on label to setup container size;     	;
 	float viewHeight = m_scrollView->getViewSize().height;
 
 	//if labels can be contained in the view, do not scroll;
@@ -267,49 +282,55 @@ void CWordScrolllViewLayer::SetWordItemToDisplay(CWordItem* pWordItem, bool remo
 		//m_scrollView->setBounceable(true);	  
 		//m_container->setContentSize(CCSize(m_container->getContentSize().width, labelsHeight));
 		m_scrollView->setTouchEnabled(false);
-		deltaYPos = deltaYPos + viewHeight - curTotalItemsHeight - ui_layout.LABEL_Y_MARGIN;	
 	}
 	else
 	{
 		m_scrollView->setTouchEnabled(true);		
-		m_scrollView->setContentSize(CCSize(m_scrollView->getViewSize().width, m_totalItemsHeight + ui_layout.LABEL_Y_MARGIN));
-		m_container->setContentSize(CCSize(m_scrollView->getViewSize().width, m_totalItemsHeight + ui_layout.LABEL_Y_MARGIN));
+		m_scrollView->setContentSize(CCSize(m_scrollView->getViewSize().width, m_totalItemsHeight));
+		m_container->setContentSize(CCSize(m_scrollView->getViewSize().width, m_totalItemsHeight));
 
-		m_scrollView->setContentOffset(CCPoint(0.f, (viewHeight - 1.05f * m_totalItemsHeight)), false);
+		//m_scrollView->setContentOffset(CCPoint(0.f, (viewHeight - 1.05f * m_totalItemsHeight)), false);
 		//m_container->setPositionY(viewHeight - labelsHeight);
 	}	
 
 	//set labels position
 	//set sample label position =  deltaYPos + height * index 
-	int yPosIndex = 0;
+	int yPosIndex = -1;
+	float labelHeight = max((float)(0), m_scrollView->getViewSize().height-m_totalItemsHeight);
 	for(vector<CCLabelTTF*>::iterator sampleLabelIT = sampleSentencesLabels.begin(); sampleLabelIT != sampleSentencesLabels.end(); sampleLabelIT++)
 	{
 		CCLabelTTF * sampleLabel = *sampleLabelIT;
-		sampleLabel->setPosition(ccp(ui_layout.LABEL_X_MARGIN, deltaYPos + (++yPosIndex) * labelHeight));
-		m_container->addChild(sampleLabel);
+		sampleLabel->setPosition(ccp(ui_layout.LABEL_X_MARGIN, labelHeight));
+		m_scrollView->addChild(sampleLabel);
+		labelHeight += sampleLabel->getContentSize().height;
 	}
 
 	//set means Label;
 	for(vector<CCLabelTTF*>::iterator meansLabelIT = meansLabels.begin(); meansLabelIT != meansLabels.end(); meansLabelIT++)
 	{
 		CCLabelTTF *meansLabel = *meansLabelIT;
-		meansLabel->setPosition(ccp(ui_layout.LABEL_X_MARGIN, deltaYPos + (++yPosIndex) * labelHeight));
-		m_container->addChild(meansLabel);
+		meansLabel->setPosition(ccp(ui_layout.LABEL_X_MARGIN, labelHeight));
+		m_scrollView->addChild(meansLabel);
+		labelHeight += meansLabel->getContentSize().height;
 	}
 
 	//set term Label;
 	if(pPronunciationLabel)
 	{
-		pPronunciationLabel->setPosition(ccp(ui_layout.LABEL_X_MARGIN, deltaYPos + (++yPosIndex) * labelHeight));
-		m_container->addChild(pPronunciationLabel);
+		pPronunciationLabel->setPosition(ccp(ui_layout.LABEL_X_MARGIN, labelHeight));
+		m_scrollView->addChild(pPronunciationLabel);
+		labelHeight += pPronunciationLabel->getContentSize().height;
 	}
 
 	//set term Label;
 	if(pTermLabel)
 	{
-		pTermLabel->setPosition(ccp(ui_layout.LABEL_X_MARGIN, deltaYPos + (++yPosIndex) * labelHeight));	//top
-		m_container->addChild(pTermLabel);	 
+		pTermLabel->setPosition(ccp(ui_layout.LABEL_X_MARGIN, labelHeight));	//top
+		m_scrollView->addChild(pTermLabel);	 
+		labelHeight += pTermLabel->getContentSize().height;
 	}
+
+	float finalPos = pTermLabel->getPositionY();
 
 	CCLog("SetWordItemToDisplay()");
 
@@ -319,6 +340,9 @@ void CWordScrolllViewLayer::SetWordItemToDisplay(CWordItem* pWordItem, bool remo
 // 	m_meansLabels.insert(m_meansLabels.end(), meansLabels.begin(), meansLabels.end());
 // 	m_sampleSentencesLabels.insert(m_sampleSentencesLabels.end(), sampleSentencesLabels.begin(), sampleSentencesLabels.end());
 
+	//show top of this viewer(in scroll view)
+	if(viewHeight < m_totalItemsHeight)
+		m_scrollView->setContentOffset(CCPoint(0, viewHeight - m_totalItemsHeight), false);
 }
 
 void CWordScrolllViewLayer::SetWordItemVectorToDisplay(vector<CWordItem>* pWordItems, bool removeAllOldItems)
@@ -338,28 +362,6 @@ void CWordScrolllViewLayer::SetWordItemVectorToDisplay(vector<CWordItem>* pWordI
 		CWordItem* pWordItem = &(*it);
 		SetWordItemToDisplay(pWordItem, false);
 	}	   	
-}
-
-//create label to add into this viewer;
-CCLabelTTF* CWordScrolllViewLayer::CreateLabel (const string& str, const char *fontName, float fontSize, float height, const ccColor3B& color)
-{
-	if(str.size() <= 0)
-		return NULL;
-
-	CCLabelTTF* pLabel = CCLabelTTF::create(str.c_str(), fontName, fontSize);  
-	pLabel->setAnchorPoint(ccp(0,0.5));
-
-	CCSize size = m_container->getContentSize();  
-	CCSize dimensions = CCSize(CCPoint(size.width, height))	;   
-	
-	//CCLog("CreateLabel() !!!!! weird , in andorid, can't use  setDimensions");
-	//!!!!! weird , in andorid, can't use  setDimensions"!!!!!!
-	//pLabel->setDimensions(dimensions);  
-
-	pLabel->setColor(color);
-	pLabel->setHorizontalAlignment(kCCTextAlignmentLeft);  
-	CCLog("CreateLabel()");
-	return pLabel;
 }
 
 //Message center
