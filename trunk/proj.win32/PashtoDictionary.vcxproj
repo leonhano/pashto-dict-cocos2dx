@@ -137,9 +137,11 @@ xcopy /Y /Q "$(ProjectDir)..\..\..\external\libwebsockets\win32\lib\*.*" "$(OutD
     <ClCompile Include="..\Classes\HelloWorldScene.cpp" />
     <ClCompile Include="..\Classes\Tools\CSVParse.cpp" />
     <ClCompile Include="..\Classes\Tools\FileReader.cpp" />
+    <ClCompile Include="..\Classes\UI\DonationViewLayer.cpp" />
+    <ClCompile Include="..\Classes\UI\HomeViewLayer.cpp" />
     <ClCompile Include="..\Classes\UI\MainLayer.cpp" />
     <ClCompile Include="..\Classes\UI\UIManager.cpp" />
-    <ClCompile Include="..\Classes\UI\WordScrollView.cpp" />
+    <ClCompile Include="..\Classes\UI\UITools.cpp" />
     <ClCompile Include="..\Classes\UI\WordScrollViewLayer.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
@@ -150,9 +152,11 @@ xcopy /Y /Q "$(ProjectDir)..\..\..\external\libwebsockets\win32\lib\*.*" "$(OutD
     <ClInclude Include="..\Classes\HelloWorldScene.h" />
     <ClInclude Include="..\Classes\Tools\CSVParse.h" />
     <ClInclude Include="..\Classes\Tools\FileReader.h" />
+    <ClInclude Include="..\Classes\UI\DonationViewLayer.h" />
+    <ClInclude Include="..\Classes\UI\HomeViewLayer.h" />
     <ClInclude Include="..\Classes\UI\MainLayer.h" />
     <ClInclude Include="..\Classes\UI\UIManager.h" />
-    <ClInclude Include="..\Classes\UI\WordScrollView.h" />
+    <ClInclude Include="..\Classes\UI\UITools.h" />
     <ClInclude Include="..\Classes\UI\WordScrollViewLayer.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>

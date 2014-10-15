@@ -63,10 +63,7 @@ public:
 
 	//create scrollview in this layer
 	void CreateScrollView(const CCSize& size);
-	
-	//create LabelTTF;
-	CCLabelTTF* CreateLabel (const string& str, const char *fontName, float fontSize, float height, const ccColor3B& color);
-	
+		
 	//recreate all items
 	void RecreateAllItems();
 

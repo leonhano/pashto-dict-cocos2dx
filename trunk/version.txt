@@ -1,0 +1,52 @@
+Pashto Dictionary
+
+-v0.22
+Date: October-14-14 5:55:19 PM
+Message:
+- change background;
+
+
+-v0.21
+Date: October-14-14 4:32:19 PM
+Message:
+- remove all spaces before $ in part1.csv(meta data)
+- add trim filter programe(C#) for remove all spaces from data file;
+----
+Modified : /trunk/Mobile/cocos2d-x-2.2.3/projects/PashtoDictionary/Resources/Pashto_English_Data/part1.csv
+Added : /trunk/Mobile/cocos2d-x-2.2.3/projects/PashtoDictionary/TrimFilters_CSharp
+Added : /trunk/Mobile/cocos2d-x-2.2.3/projects/PashtoDictionary/TrimFilters_CSharp/TrimTest
+Added : /trunk/Mobile/cocos2d-x-2.2.3/projects/PashtoDictionary/TrimFilters_CSharp/TrimTest/Program.cs
+Added : /trunk/Mobile/cocos2d-x-2.2.3/projects/PashtoDictionary/TrimFilters_CSharp/TrimTest/Properties
+Added : /trunk/Mobile/cocos2d-x-2.2.3/projects/PashtoDictionary/TrimFilters_CSharp/TrimTest/Properties/AssemblyInfo.cs
+Added : /trunk/Mobile/cocos2d-x-2.2.3/projects/PashtoDictionary/TrimFilters_CSharp/TrimTest/TrimTest.csproj
+Added : /trunk/Mobile/cocos2d-x-2.2.3/projects/PashtoDictionary/TrimFilters_CSharp/TrimTest/bin
+Added : /trunk/Mobile/cocos2d-x-2.2.3/projects/PashtoDictionary/TrimFilters_CSharp/TrimTest/bin/Debug
+Added : /trunk/Mobile/cocos2d-x-2.2.3/projects/PashtoDictionary/TrimFilters_CSharp/TrimTest/bin/Debug/TrimTest.exe
+Added : /trunk/Mobile/cocos2d-x-2.2.3/projects/PashtoDictionary/TrimFilters_CSharp/TrimTest/bin/Debug/TrimTest.pdb
+Added : /trunk/Mobile/cocos2d-x-2.2.3/projects/PashtoDictionary/TrimFilters_CSharp/TrimTest/bin/Debug/TrimTest.vshost.exe
+Added : /trunk/Mobile/cocos2d-x-2.2.3/projects/PashtoDictionary/TrimFilters_CSharp/TrimTest/bin/Debug/TrimTest.vshost.exe.manifest
+Added : /trunk/Mobile/cocos2d-x-2.2.3/projects/PashtoDictionary/TrimFilters_CSharp/TrimTest/bin/Release
+Added : /trunk/Mobile/cocos2d-x-2.2.3/projects/PashtoDictionary/TrimFilters_CSharp/TrimTest/bin/Release/TrimTest.exe
+Added : /trunk/Mobile/cocos2d-x-2.2.3/projects/PashtoDictionary/TrimFilters_CSharp/TrimTest/bin/Release/TrimTest.pdb
+Added : /trunk/Mobile/cocos2d-x-2.2.3/projects/PashtoDictionary/TrimFilters_CSharp/TrimTest/bin/Release/TrimTest.vshost.exe
+Added : /trunk/Mobile/cocos2d-x-2.2.3/projects/PashtoDictionary/TrimFilters_CSharp/TrimTest/bin/Release/TrimTest.vshost.exe.manifest
+Added : /trunk/Mobile/cocos2d-x-2.2.3/projects/PashtoDictionary/TrimFilters_CSharp/readme.txt
+
+
+
+-v0.2   2014-10-14
+- fix a bug: size of selectable area(in Key_TextField) 
+
+修复了你反映的问题， 原来 editor的touch size是和字体size 大小一样（动态调整）。
+
+现在设置成整个控件尺寸
+
+-V0.1   2014-09-23
+Release notes:
+1. Fix label auto wrap bug
+2. Fix UI bug - height of items in scrollview
+3. Fix dictionary data  and rebuild,
+
+
+Revision: 225
+Author: hhan

@@ -6,6 +6,9 @@
 #include "CocoStudio\GUI\BaseClasses\UIWidget.h"
 #include "DataStruct\WordManager.h"
 
+const int HomeID = 0;
+const int WordID = 1;
+const int DonationID = 2;
 
 CCScene* CMainLayer::scene()
 {
@@ -70,26 +73,53 @@ bool CMainLayer::init()
 	
 	CUIManager::UI_LAYOUT ui_layout = CUIManager::getInstance().ui_layout;
 	
-	//------------whole layer---------------//
-	//CCLayerColor* whole_layer = CCLayerColor::create(ccc4(100,100,10,255), ui_layout.Whole_Layer_Size.width, ui_layout.Whole_Layer_Size.height);
-	CCSprite* whole_layer = CCSprite::create("background1.png");
-	whole_layer->setTag(ui_layout.TAG_whole_layer);
-	whole_layer->setAnchorPoint(CCPointZero);
-	whole_layer->setPosition(CCPointZero);
-	this->addChild(whole_layer, 0);	 
+	//load all background images;
+	m_pBkgTexture1 = CCTextureCache::sharedTextureCache()->addImage(ui_layout.BKG_IMAGE1);
+	m_pBkgTexture2 = CCTextureCache::sharedTextureCache()->addImage(ui_layout.BKG_IMAGE2);
+	m_pBkgTexture3 = CCTextureCache::sharedTextureCache()->addImage(ui_layout.BKG_IMAGE3);
 
+	//------------whole layer---------------//
 	//background image;
-	CCSprite* bk_Img = CCSprite::create("Key_TextField.png");
-	bk_Img->setTag(ui_layout.TAG_bk_Img);
-	bk_Img->setAnchorPoint(CCPointZero);
-	bk_Img->setPosition(ui_layout.IMG_TextField_Rect.origin);
-	whole_layer->addChild(bk_Img, 1);
-	
+	m_pBkgSpirte = CCSprite::createWithTexture(m_pBkgTexture1);
+	m_pBkgSpirte->setTag(ui_layout.TAG_whole_layer);
+	m_pBkgSpirte->setAnchorPoint(CCPointZero);
+	m_pBkgSpirte->setPosition(CCPointZero);
+	this->addChild(m_pBkgSpirte, 0);	 
+
+	// 	//text field image
+	CCSprite* textfield_Img = CCSprite::create("Key_TextField.png");
+	textfield_Img->setTag(ui_layout.TAG_keyTextField_IMG);
+	textfield_Img->setAnchorPoint(CCPointZero);
+	textfield_Img->setPosition(ui_layout.IMG_TextField_Rect.origin);
+	m_pBkgSpirte->addChild(textfield_Img, 2);
+
 	//------------- UI layer ------------//
 	m_pUILayer = UILayer::create();
 	m_pUILayer->setTag(ui_layout.TAG_m_pUILayer);
 	m_pUILayer->scheduleUpdate();
-	addChild(m_pUILayer);
+	addChild(m_pUILayer, 5);
+
+	//-------------create section layer --------------//
+	CCLayerColor* sectionColorLayer = CCLayerColor::create(ccc4BFromccc4F(ui_layout.Section_Area_Bkg_Color), ui_layout.Section_Area_Rect.size.width, ui_layout.Section_Area_Rect.size.height);
+	sectionColorLayer->setContentSize(ui_layout.Section_Area_Rect.size);
+	sectionColorLayer->setPosition(ui_layout.Section_Area_Rect.origin);
+	m_pBkgSpirte->addChild(sectionColorLayer, 2);			
+
+	//--------create section buttons--------//
+	//Home btn
+	m_sectionHomebtn = AddButton(ui_layout.TAG_sectionHomeBtn,
+		ui_layout.Section_Home_Button_Texture_Normal, ui_layout.Section_Home_Button_Texture_Selected, ui_layout.Section_Home_Button_Texture_Disabled,
+		ui_layout.Section_Home_Button_Rect, true);
+
+	//word btn
+	m_sectionWordbtn =  AddButton(ui_layout.TAG_sectionWordbtn,
+		ui_layout.Section_Word_Button_Texture_Normal, ui_layout.Section_Word_Button_Texture_Selected, ui_layout.Section_Word_Button_Texture_Disabled,
+		ui_layout.Section_Word_Button_Rect, false); 
+
+	//donation btn
+	m_sectionDonationbtn =  AddButton(ui_layout.TAG_sectionDonationbtn,
+		ui_layout.Section_Donation_Button_Texture_Normal, ui_layout.Section_Donation_Button_Texture_Selected, ui_layout.Section_Donation_Button_Texture_Disabled,
+		ui_layout.Section_Donation_Button_Rect, false); 
 
 	//-------- Create the textfield --------
 	UITextField* keyTextField = UITextField::create(); 
@@ -100,89 +130,39 @@ bool CMainLayer::init()
 	keyTextField->setFontName("Arial");
 	keyTextField->setFontSize(ui_layout.FONTSIZE_KEY_TEXTFIELD);
 	keyTextField->setPlaceHolder("input words here");
+	keyTextField->setColor(ui_layout.FONTCOLOR_TEXTFIELD);
 	keyTextField->setAnchorPoint(CCPointZero);
 	keyTextField->setPosition(ui_layout.Input_TextField_Rect.origin);
+	keyTextField->setTouchSize(ui_layout.Input_TextField_Rect.size);
+	keyTextField->setTouchAreaEnabled(true);
 	keyTextField->setTextHorizontalAlignment(kCCTextAlignmentRight);
 	keyTextField->addEventListenerTextField(this, textfieldeventselector(CMainLayer::textFieldEvent));
-	m_pUILayer->addWidget(keyTextField);
-			
-	//--------create section buttons--------//
+	m_pUILayer->addWidget(keyTextField);	
 	
-	//word btn
-	m_sectionWordbtn = UIButton::create();
-	m_sectionWordbtn->setTag(ui_layout.TAG_sectionWordbtn);
-	m_sectionWordbtn->loadTextures(ui_layout.Section_Button_Texture_Normal, ui_layout.Section_Button_Texture_Selected, ui_layout.Section_Button_Texture_Disabled);
-	m_sectionWordbtn->setColor(ui_layout.Section_Area_Bkg_Color);
-	m_sectionWordbtn->setTitleFontName(ui_layout.Section_Button_FontName);
-	m_sectionWordbtn->setTitleFontSize(ui_layout.Section_Button_FontSize);
-	m_sectionWordbtn->setTitleColor(ui_layout.Section_Button_TextColor);
-	m_sectionWordbtn->setTitleText(ui_layout.Section_Word_Button_Text);
-	m_sectionWordbtn->setPosition(ui_layout.Section_Word_Button_Rect.origin);
-	m_sectionWordbtn->setSize(ui_layout.Section_Word_Button_Rect.size);
-	m_sectionWordbtn->setVisible(true);
-	m_sectionWordbtn->setTouchEnabled(true);
-	m_sectionWordbtn->setFocused(true);
-	m_sectionWordbtn->addTouchEventListener(this, toucheventselector(CMainLayer::sectionButtonsCallback));
-	m_pUILayer->addWidget(m_sectionWordbtn);
-
-	//donation btn
-	m_sectionDonationbtn = UIButton::create();
-	m_sectionDonationbtn->setTag(ui_layout.TAG_sectionDonationbtn);
-	m_sectionDonationbtn->loadTextures(ui_layout.Section_Button_Texture_Normal, ui_layout.Section_Button_Texture_Selected, ui_layout.Section_Button_Texture_Disabled);
-	m_sectionDonationbtn->setColor(ui_layout.Section_Area_Bkg_Color);
-	m_sectionDonationbtn->setTitleFontName(ui_layout.Section_Button_FontName);
-	m_sectionDonationbtn->setTitleFontSize(ui_layout.Section_Button_FontSize);
-	m_sectionDonationbtn->setTitleColor(ui_layout.Section_Button_TextColor);
-	m_sectionDonationbtn->setTitleText(ui_layout.Section_Donation_Button_Text);
-	m_sectionDonationbtn->setPosition(ui_layout.Section_Donation_Button_Rect.origin);
-	m_sectionDonationbtn->setSize(ui_layout.Section_Donation_Button_Rect.size);
-	m_sectionDonationbtn->setVisible(true);
-	m_sectionDonationbtn->setTouchEnabled(true);
-	m_sectionDonationbtn->setFocused(false);
-	m_sectionDonationbtn->addTouchEventListener(this, toucheventselector(CMainLayer::sectionButtonsCallback));
-	m_pUILayer->addWidget(m_sectionDonationbtn);
-
-	/* 
-	//load main layer from json file;
-	m_pLayout = dynamic_cast<Layout*> (GUIReader::shareReader()->widgetFromJsonFile("MainLayer_1/MainLayer_1.json"));
-	if(m_pLayout)
-	{
-		//this->addChild(m_pLayout);
-		m_pUILayer->addWidget(m_pLayout);
-	}	
-
-	//Term label		
-	ShowTerm("Hello word");
-	//register text field event
-	UITextField *keyTextField = dynamic_cast<UITextField*> (m_pUILayer->getWidgetByName(UI_KEY_TEXTFIELD));
-	keyTextField->addEventListenerTextField(this, textfieldeventselector(CMainLayer::textFieldEvent));
-
-	UIImageView * searchSprite = dynamic_cast<UIImageView*> (m_pUILayer->getWidgetByName(UI_SEARCH_SPRITE));
-	//searchSprite->addTouchEventListener(this, toucheventselector(CMainLayer::searchImageViewtouchEventCallback));
-	*/
+	//------------- Home Scrollview ---------//
+	m_pHomeScrollViewLayer = CHomeViewLayer::create(ui_layout.Home_Scrollviewer_BK_Color, ui_layout.Home_Show_Layer_Rect);
+	m_pHomeScrollViewLayer->setTag(ui_layout.TAG_HomeScrollViewLayer);
+	m_pBkgSpirte->addChild(m_pHomeScrollViewLayer, 6); 
 	
-
 	//------------- Word Scrollview ---------//
 	m_pWordScrollViewLayer = CWordScrolllViewLayer::create(ui_layout.Word_Scrollviewer_BK_Color, ui_layout.Word_Show_Layer_Rect);
 	m_pWordScrollViewLayer->setTag(ui_layout.TAG_WordScrollViewLayer);
-	whole_layer->addChild(m_pWordScrollViewLayer); 
+	m_pBkgSpirte->addChild(m_pWordScrollViewLayer, 6); 
 	
 	//------------- Donation Scrollview ---------//
-	m_pDonationScrollViewLayer= CWordScrolllViewLayer::create(ui_layout.Donation_Scrollviewer_BK_Color, ui_layout.Donation_Show_Layer_Rect);
+	m_pDonationScrollViewLayer= CDonationViewLayer::create(ui_layout.Donation_Scrollviewer_BK_Color, ui_layout.Donation_Show_Layer_Rect);
 	m_pDonationScrollViewLayer->setTag(ui_layout.TAG_DonationScrollViewLayer);
-	whole_layer->addChild(m_pDonationScrollViewLayer);
+	m_pBkgSpirte->addChild(m_pDonationScrollViewLayer, 6);
 	
-	m_curScrollviewerLayerID = 0;	//default to show word scrollviewer layer;
-	m_scrollViewerCount = 2;		//2 scrollviewer now;
-		
+	m_curScrollviewerLayerID = HomeID;	//default to show Home scrollviewer layer;
+	m_scrollViewerCount = 3;		//3 scrollviewer now;
+
 	//test for word scrollviewer;
 	vector<CWordItem>* wordItems = CWordManager::getInstance().GetWords("ابابیله");	
 	if(wordItems)
 	{	
 		m_pWordScrollViewLayer->SetWordItemVectorToDisplay(wordItems, true);
 	}	   
-	//test for donation scrollviewer;
-	ShowText(m_pDonationScrollViewLayer, "Donation:     test !!!!!");
 
 
 	//for test;
@@ -223,7 +203,7 @@ void CMainLayer::textFieldEvent(CCObject *pSender, TextFiledEventType type)
 // 				CCMoveBy* moveBy = CCMoveBy::create(0.1f, ccp(0, textField->getContentSize().height * 2.5));
 // 				m_pLayout->runAction(moveBy);
 // 			}
-			CCLog("点击");
+			CCLog("text field: click");
 		}
 		break;
 
@@ -237,7 +217,7 @@ void CMainLayer::textFieldEvent(CCObject *pSender, TextFiledEventType type)
 // 				m_pLayout->runAction(moveBy);
 // 			}
 
-			CCLog("移开");
+			CCLog("text field: remove   ");
 			printf("%s",textField->getStringValue());
 		}
 		break;
@@ -245,9 +225,15 @@ void CMainLayer::textFieldEvent(CCObject *pSender, TextFiledEventType type)
 	case TEXTFIELD_EVENT_INSERT_TEXT:
 	case TEXTFIELD_EVENT_DELETE_BACKWARD:
 		{
+			//when input text to search, viewer is not words, then move it to this viewer;
+			if(!m_sectionWordbtn->isFocused())
+			{
+				SetButtonFocused(m_sectionWordbtn);	//set section buttons focused
+				ShowScrollviewer(WordID);
+			}
 			bool bFindWord = false;
 
-			CCLog("增加字段 in text field");
+			CCLog("text field:  add");
 			UITextField* textField = dynamic_cast<UITextField*>(pSender);
 			
 			//check string is number
@@ -312,14 +298,20 @@ void CMainLayer::sectionButtonsCallback(CCObject *pSender, TouchEventType type)
 		SetButtonFocused(pButton);	//set section buttons focused
 				
 		//based on button selected, change scroll viewer to show;
-		if(m_sectionWordbtn->isFocused())
+		if(m_sectionHomebtn->isFocused())
 		{
-			ShowScrollviewer(0);
+			ShowScrollviewer(HomeID);
+		}
+		else if(m_sectionWordbtn->isFocused())
+		{
+			ShowScrollviewer(WordID);
 		}
 		else if(m_sectionDonationbtn->isFocused())
 		{
-			ShowScrollviewer(1);
+			ShowScrollviewer(DonationID);
 		}  		
+		else
+			ShowScrollviewer(HomeID);
 		//CCLog("word layer: isTouchEnabled = %d, m_scrollview = %d  ", m_pWordScrollViewLayer->isTouchEnabled(), m_pWordScrollViewLayer->m_scrollView->isTouchEnabled());
 		//CCLog("Donation layer: isTouchEnabled = %d, m_scrollview = %d  ", m_pDonationScrollViewLayer->isTouchEnabled(), m_pDonationScrollViewLayer->m_scrollView->isTouchEnabled())	;
 		break;
@@ -338,19 +330,23 @@ void CMainLayer::ShowScrollviewer(int curLayerId)
 // 		return;
 
 	if(curLayerId < 0)
-		curLayerId = 0;
+		curLayerId = HomeID;
 
 	if(curLayerId >= m_scrollViewerCount)
 		curLayerId = m_scrollViewerCount -1;
+	
+	ChangeBkgImage(curLayerId);
 
 	float xOffset = -1 * curLayerId * m_pWordScrollViewLayer->getContentSize().width;	 //calculate x offset to move all layers;
 	MoveScrollviewers(xOffset);	
 	m_curScrollviewerLayerID = curLayerId;
 
-	if(curLayerId == 0)
+	if(curLayerId == WordID)
 		SetButtonFocused(m_sectionWordbtn);
-	else if	(curLayerId == 1)
+	else if	(curLayerId == DonationID)
 		SetButtonFocused(m_sectionDonationbtn);
+	else
+		SetButtonFocused(m_sectionHomebtn);
 }
 
 
@@ -366,6 +362,10 @@ void CMainLayer::MoveScrollviewers(float xOffset)
 {		
 	CUIManager::UI_LAYOUT ui_layout = CUIManager::getInstance().ui_layout;
 
+	//new home scrollviewer position
+	CCPoint newHomeLayerPos = ccp(ui_layout.Home_Show_Layer_Rect.origin.x + xOffset, ui_layout.Home_Show_Layer_Rect.origin.y);
+	m_pHomeScrollViewLayer->setPosition(newHomeLayerPos);
+
 	//new word scrollviewer position
 	CCPoint newWordLayerPos = ccp(ui_layout.Word_Show_Layer_Rect.origin.x + xOffset, ui_layout.Word_Show_Layer_Rect.origin.y);
 	m_pWordScrollViewLayer->setPosition(newWordLayerPos);
@@ -380,6 +380,7 @@ void CMainLayer::MoveScrollviewers(float xOffset)
 void CMainLayer::SetButtonFocused(UIButton* pButton)
 {
 	//set all buttons not focused
+	m_sectionHomebtn->setFocused(false);
 	m_sectionDonationbtn->setFocused(false);
 	m_sectionWordbtn->setFocused(false);
 
@@ -494,4 +495,58 @@ bool CMainLayer::ShowWord(CWordScrolllViewLayer* pScrollviewer, int id)
 void CMainLayer::ShowText(CWordScrolllViewLayer* pScrollviewer, const char* str)
 {
 	pScrollviewer->SetTextToDisplay(str);
+}
+
+
+//************************************
+// FullName:  CMainLayer::AddButton
+// Qualifier: Add button into section area;
+// Parameter: int tag   : tag
+// Parameter: const char * normal   : normal texture file name
+// Parameter: const char * selected   : selected texture file name
+// Parameter: const char * disabled   : disable texture file name
+// Parameter: const CCRect & rect   : rect
+// Parameter: bool focused   : focused or not;
+//************************************
+UIButton* CMainLayer::AddButton(int tag, 
+								const char* normal,const char* selected,const char* disabled, 
+								const CCRect& rect, bool focused)
+{
+	UIButton* pbutton = UIButton::create();
+	pbutton->setTag(tag);
+	pbutton->loadTextures(normal, selected, disabled);
+	//pbutton->setColor(ui_layout.Section_Area_Bkg_Color);
+	//pbutton->setTitleFontName(ui_layout.Section_Button_FontName);
+	//pbutton->setTitleFontSize(ui_layout.Section_Button_FontSize);
+	//pbutton->setTitleColor(ui_layout.Section_Button_TextColor);
+	//pbutton->setTitleText(ui_layout.Section_Home_Button_Text);
+	pbutton->setPosition(rect.origin);
+	pbutton->setSize(rect.size);
+	pbutton->setVisible(true);
+	pbutton->setTouchEnabled(true);
+	pbutton->setFocused(focused);
+	pbutton->addTouchEventListener(this, toucheventselector(CMainLayer::sectionButtonsCallback));
+	m_pUILayer->addWidget(pbutton);
+	return pbutton;
+}
+
+//************************************
+// FullName:  CMainLayer::ChangeBkgImage
+// Qualifier: Change background image;
+// Parameter: int curLayerId   : current Id
+//************************************
+void CMainLayer::ChangeBkgImage(int curLayerId)
+{
+	if(curLayerId == DonationID)
+	{
+		m_pBkgSpirte->setTexture(m_pBkgTexture3);
+	}
+	else if(curLayerId == WordID)
+	{
+		m_pBkgSpirte->setTexture(m_pBkgTexture2);
+	}
+	else
+	{
+		m_pBkgSpirte->setTexture(m_pBkgTexture1);
+	}
 }
